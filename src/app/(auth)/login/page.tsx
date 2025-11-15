@@ -4,11 +4,8 @@ import { requireUnauth } from "@/lib/auth-utils";
 const page = async () => {
     await requireUnauth();
 
-    return (
-        <div>
-            <LoginForm />
-        </div>
-    );
+    return <LoginForm />;
+        
 };
 
 export default page;
