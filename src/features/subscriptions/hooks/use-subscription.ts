@@ -9,6 +9,8 @@ export const useSubscription = () => {
             const { data } = await authClient.customer.state();
             return data;
         },
+        refetchOnWindowFocus: true,
+        staleTime: 0,
     });
 };
 
