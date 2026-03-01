@@ -7,7 +7,7 @@ import { polarClient } from "./polar";
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: "postgresql",
-    }),
+    }), 
     emailAndPassword: {
         enabled: true,
         autoSignIn: true,
@@ -20,7 +20,7 @@ export const auth = betterAuth({
                 checkout({
                     products: [
                         {
-                            productId: "7787fbbb-5f03-48f3-bf36-47b4693acb25",
+                            productId: "fdff5986-2602-4654-8c8a-6e68310c4a45",
                             slug: "pro",
                         }
                     ],

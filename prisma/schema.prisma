@@ -75,6 +75,25 @@ model Verification {
   @@map("verification")
 }
 
+model Subscription {
+  id                   String    @id
+  plan                 String
+  referenceId          String
+  polarId              String?   @unique
+  polarPriceId         String?
+  currency             String?
+  interval             String?
+  status               String
+  currentPeriodStart   DateTime?
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean?
+  amount               Int?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  @@map("subscription")
+}
+
 
 model Workflow {
   id String @id @default(cuid())
@@ -82,7 +101,51 @@ model Workflow {
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
 
+  nodes Node[]
+  connections Connection[]
+
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+}
+
+enum NodeType {
+  INITIAL
+}
+
+
+model Node {
+  id String @id @default(cuid())
+  workflowId String
+  workflow Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  Name String 
+  type NodeType
+  position Json
+  data Json @default("{}")
+
+  outoutConnections Connection[] @relation("FromNode")
+  inputConnections Connection[] @relation("ToNode")
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
+
+model Connection {
+  id String @id @default(cuid())
+  workflowId String
+  workflow Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  fromNodeID String
+  fromNode Node @relation("FromNode", fields: [fromNodeID], references: [id], onDelete: Cascade)
+  toNodeID String
+  toNode Node @relation("ToNode", fields: [toNodeID], references: [id], onDelete: Cascade)
+
+  fromOutput String @default("main")
+  toInput String @default("main")
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  @@unique([fromNodeID, toNodeID, fromOutput, toInput])
 }
